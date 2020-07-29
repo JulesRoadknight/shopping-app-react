@@ -13,15 +13,15 @@ Amplify.configure({
     userPoolId: config.cognito.USER_POOL_ID,
     identityPoolId: config.cognito.IDENTITY_POOL_ID,
     userPoolWebClientId: config.cognito.APP_CLIENT_ID
-  },
-  API: {
-    endpoints: [
-      {
-        name: "notes",
-        endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
-      },
-    ]
+  // },
+  // API: {
+  //   endpoints: [
+  //     {
+  //       name: "notes",
+  //       endpoint: config.apiGateway.URL,
+  //       region: config.apiGateway.REGION
+  //     },
+  //   ]
   }
 });
 
