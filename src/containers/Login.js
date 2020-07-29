@@ -1,8 +1,10 @@
 import { Auth } from 'aws-amplify';
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
+import { useAppContext } from '../libs/contextLib';
 
 const Login = () => {
+  const { setIsAuthenticated } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,7 +17,7 @@ const Login = () => {
 
     try {
       await Auth.signIn(email, password);
-      alert("Logged in");
+      setIsAuthenticated(true);
     } catch (e) {
       alert(e.message);
     }
@@ -24,18 +26,20 @@ const Login = () => {
   return (
     <div className="Login">
       <form onSubmit={handleSubmit}>
-        <FormGroup data-testid='loginEmail' controlId="email" bsSize="large">
+        <FormGroup controlId="email">
           <FormLabel>Email</FormLabel>
           <FormControl
+            data-testid='loginEmail'
             autoFocus
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
         </FormGroup>
-        <FormGroup data-testid='loginPassword' controlId="password" bsSize="large">
+        <FormGroup controlId="password">
           <FormLabel>Password</FormLabel>
           <FormControl
+            data-testid='loginPassword'
             value={password}
             onChange={e => setPassword(e.target.value)}
             type="password"
