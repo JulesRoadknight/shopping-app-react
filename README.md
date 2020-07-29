@@ -4,6 +4,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `yarn test -- --coverage --watchAll=false`
+
+Gives actual test coverage, but fails passing tests.
+
+### `cypress run`
+
+Runs the automated Cypress testing software in the browser.
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
