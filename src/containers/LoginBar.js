@@ -3,8 +3,8 @@ import React from 'react';
 import { useAppContext } from '../libs/contextLib';
 
 
-const LoginBar = ({data}) => {
-  const { setIsAuthenticated } = useAppContext();
+const LoginBar = () => {
+  const { isAuthenticated, setIsAuthenticated } = useAppContext();
   const handleLogout = () => {
     setIsAuthenticated(false);
   }
@@ -17,7 +17,7 @@ const LoginBar = ({data}) => {
         </a>
       </div>
       <div style={{gridArea: 'header'}}>
-        {data
+        {isAuthenticated
           ? <Button data-testid="logoutButton" variant='outline-secondary' onClick={handleLogout} value='Logout'>Logout</Button>
           : <>
               <a href="/signup">

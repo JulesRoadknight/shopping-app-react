@@ -10,7 +10,7 @@ function App() {
 
   return (
     <AppContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
-      <LoginBar data={isAuthenticated} />
+      <LoginBar />
       <Routes />
     </AppContext.Provider>
   );
