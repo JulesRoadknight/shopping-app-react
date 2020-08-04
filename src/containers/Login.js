@@ -2,6 +2,7 @@ import { Auth } from 'aws-amplify';
 import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import { useAppContext } from '../libs/contextLib';
+import { onError } from '../libs/errorLib';
 
 const Login = () => {
   const { setIsAuthenticated } = useAppContext();
@@ -19,7 +20,7 @@ const Login = () => {
       await Auth.signIn(email, password);
       setIsAuthenticated(true);
     } catch (e) {
-      alert(e.message);
+      onError(e);
     }
   }
 

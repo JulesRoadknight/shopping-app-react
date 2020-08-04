@@ -4,35 +4,26 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import LoaderButton from "../components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
-// import { onError } from "../libs/errorLib";
+import { onError } from "../libs/errorLib";
+import { Auth } from 'aws-amplify';
 
 const Signup = () => {
   const MINIMUM_PASSWORD_LENGTH = 8;
 
   const [fields, handleFieldChange] = useFormFields({
-    // given_name: '',
-    // family_name: '',
     email: '',
-    // birthdate: '',
-    // phone_number: '',
-    // address: '',
     password: '',
     confirmationCode: ''
   });
 
   const history = useHistory();
   const [newUser, setNewUser] = useState(null);
-  const { userHasAuthenticated } = useAppContext();
+  const { setIsAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
 
   function validateForm() {
     return (
-      // fields.given_name.length > 0 &&
-      // fields.family_name.length > 0 &&
       fields.email.length > 0 &&
-      // fields.birthdate.length > 0 &&
-      // fields.phone_number.length > 0 &&
-      // fields.address.length > 0 &&
       fields.password.length > MINIMUM_PASSWORD_LENGTH - 1
     );
   }
@@ -44,19 +35,40 @@ const Signup = () => {
   async function handleSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
-    setNewUser('test');
-    setIsLoading(false);
+
+    try {
+      const newUser = await Auth.signUp({
+        username: fields.email,
+        password: fields.password,
+      });
+      setIsLoading(false);
+      setNewUser(newUser);
+    } catch (e) {
+      onError(e);
+      setIsLoading(false);
+    }
   }
 
   async function handleConfirmationSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
+
+    try {
+      await Auth.confirmSignUp(fields.email, fields.confirmationCode);
+      await Auth.signIn(fields.email, fields.password);
+
+      setIsAuthenticated(true);
+      history.push("/");
+    } catch (e) {
+      onError(e);
+      setIsLoading(false);
+    }
   }
 
   function renderConfirmationForm() {
     return (
       <form onSubmit={handleConfirmationSubmit}>
-        <FormGroup controlId="confirmationCode" bsSize="large">
+        <FormGroup controlId="confirmationCode">
           <FormLabel>Confirmation Code</FormLabel>
           <FormControl
             autoFocus
@@ -64,12 +76,10 @@ const Signup = () => {
             onChange={handleFieldChange}
             value={fields.confirmationCode}
           />
-          {/* <HelpBlock>Please check your email for the code.</HelpBlock> */}
         </FormGroup>
         <LoaderButton
           block
           type="submit"
-          bsSize="large"
           isLoading={isLoading}
           disabled={!validateConfirmationForm()}
         >
@@ -82,7 +92,7 @@ const Signup = () => {
   function renderForm() {
     return (
       <form onSubmit={handleSubmit}>
-        <FormGroup controlId="email" bsSize="large">
+        <FormGroup controlId="email">
           <FormLabel>Email</FormLabel>
           <FormControl
             autoFocus
@@ -91,7 +101,7 @@ const Signup = () => {
             onChange={handleFieldChange}
           />
         </FormGroup>
-        <FormGroup controlId="password" bsSize="large">
+        <FormGroup controlId="password">
           <FormLabel>Password</FormLabel>
           <FormControl
             type="password"
@@ -99,7 +109,7 @@ const Signup = () => {
             onChange={handleFieldChange}
           />
         </FormGroup>
-        <FormGroup controlId="confirmPassword" bsSize="large">
+        <FormGroup controlId="confirmPassword">
           <FormLabel>Confirm Password</FormLabel>
           <FormControl
             type="password"
@@ -110,7 +120,6 @@ const Signup = () => {
         <LoaderButton
           block
           type="submit"
-          bsSize="large"
           isLoading={isLoading}
           disabled={!validateForm()}
         >
