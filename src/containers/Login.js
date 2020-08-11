@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import { useAppContext } from '../libs/contextLib';
 import { onError } from '../libs/errorLib';
+import axios from 'axios';
 
 const Login = () => {
   const { setIsAuthenticated } = useAppContext();
@@ -13,12 +14,20 @@ const Login = () => {
     return email.length > 0 && password.length > 0;
   }
 
+  async function getUserData(email) {
+    const response = await axios.get(
+      `http://localhost:4000/users/${email}`
+    )
+    console.log(response.data);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
     try {
       await Auth.signIn(email, password);
       setIsAuthenticated(true);
+      getUserData(email);
     } catch (e) {
       onError(e);
     }
