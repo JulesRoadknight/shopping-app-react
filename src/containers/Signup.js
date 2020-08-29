@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import LoaderButton from "../components/LoaderButton";
-import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
-import { Auth } from 'aws-amplify';
+import axios from 'axios';
 
 const Signup = () => {
   const MINIMUM_PASSWORD_LENGTH = 8;
@@ -13,80 +11,52 @@ const Signup = () => {
   const [fields, handleFieldChange] = useFormFields({
     email: '',
     password: '',
-    confirmationCode: ''
   });
 
-  const history = useHistory();
   const [newUser, setNewUser] = useState(null);
-  const { setIsAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [emailTaken, setEmailTaken] = useState(false);
 
-  function validateForm() {
-    return (
-      fields.email.length > 0 &&
-      fields.password.length > MINIMUM_PASSWORD_LENGTH - 1
-    );
+  const isUserUnique = async (email) => {
+    if(email !== undefined) {
+    let result = await fetch(`http://localhost:4000/users/exists/${email}`)
+    let jsonData = await result.json();
+
+    return !jsonData[0].exists;
+    }
   }
 
-  function validateConfirmationForm() {
-    return fields.confirmationCode.length > 0;
+  function postNewUser(email, password) {
+    axios.post(`http://localhost:4000/users`, [email, password])
+    .then(res => console.log(res.status))
+    .catch(err => console.log(err));
+  }
+
+  function areFieldsValid() {
+    return (
+      fields.email.length > 0 &&
+      fields.password.length > MINIMUM_PASSWORD_LENGTH - 1 &&
+      fields.password === fields.confirmPassword
+    )
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
-
-    try {
-      const newUser = await Auth.signUp({
-        username: fields.email,
-        password: fields.password,
-      });
-      setIsLoading(false);
-      setNewUser(newUser);
-    } catch (e) {
-      onError(e);
-      setIsLoading(false);
-    }
-  }
-
-  async function handleConfirmationSubmit(event) {
-    event.preventDefault();
-    setIsLoading(true);
-
-    try {
-      await Auth.confirmSignUp(fields.email, fields.confirmationCode);
-      await Auth.signIn(fields.email, fields.password);
-
-      setIsAuthenticated(true);
-      history.push("/");
-    } catch (e) {
-      onError(e);
+    if (await isUserUnique(fields.email) === true) {
+      try {
+        setEmailTaken(false);
+        setIsLoading(false);
+        setNewUser(newUser);
+        postNewUser(fields.email, fields.password);
+      } catch (e) {
+        onError(e);
+        setIsLoading(false);
+      } 
+    } else {
+      setEmailTaken(true);
       setIsLoading(false);
     }
-  }
-
-  function renderConfirmationForm() {
-    return (
-      <form onSubmit={handleConfirmationSubmit}>
-        <FormGroup controlId="confirmationCode">
-          <FormLabel>Confirmation Code</FormLabel>
-          <FormControl
-            autoFocus
-            type="tel"
-            onChange={handleFieldChange}
-            value={fields.confirmationCode}
-          />
-        </FormGroup>
-        <LoaderButton
-          block
-          type="submit"
-          isLoading={isLoading}
-          disabled={!validateConfirmationForm()}
-        >
-          Verify
-        </LoaderButton>
-      </form>
-    );
   }
 
   function renderForm() {
@@ -95,15 +65,22 @@ const Signup = () => {
         <FormGroup controlId="email">
           <FormLabel>Email</FormLabel>
           <FormControl
+            data-testid='signupEmail'
             autoFocus
             type="email"
             value={fields.email}
             onChange={handleFieldChange}
           />
         </FormGroup>
+        { emailTaken &&
+          <h4 data-testid='emailTaken' style={{color:'red'}}>
+            This email is already taken
+          </h4>
+        }
         <FormGroup controlId="password">
           <FormLabel>Password</FormLabel>
           <FormControl
+            data-testid='signupPassword'
             type="password"
             value={fields.password}
             onChange={handleFieldChange}
@@ -112,16 +89,18 @@ const Signup = () => {
         <FormGroup controlId="confirmPassword">
           <FormLabel>Confirm Password</FormLabel>
           <FormControl
+            data-testid='signupConfirmPassword'
             type="password"
             onChange={handleFieldChange}
             value={fields.confirmPassword}
           />
         </FormGroup>
         <LoaderButton
+          data-testid='signupSubmit'
           block
           type="submit"
           isLoading={isLoading}
-          disabled={!validateForm()}
+          disabled={!areFieldsValid()}
         >
           Signup
         </LoaderButton>
@@ -131,7 +110,7 @@ const Signup = () => {
 
   return (
     <div className="Signup">
-      {newUser === null ? renderForm() : renderConfirmationForm()}
+      {renderForm()}
     </div>
   );
 }

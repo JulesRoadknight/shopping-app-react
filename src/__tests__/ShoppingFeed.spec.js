@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
-import ShoppingFeed from '../ShoppingFeed';
+import ShoppingFeed from '../containers/ShoppingFeed';
 
 describe('<ShoppingFeed />', () => {
   let getByTestId;

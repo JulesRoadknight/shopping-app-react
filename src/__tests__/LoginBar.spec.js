@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
-import LoginBar from '../containers/LoginBar';
+import Routes from '../Routes'
 import { AppContext } from '../libs/contextLib';
 
 describe('<LoginBar />', () => {
@@ -14,7 +14,7 @@ describe('<LoginBar />', () => {
       sendHandler = jest.fn();
       ({ getByTestId } = render(
       <AppContext.Provider value={{ isAuthenticated: false }}>
-        <LoginBar />
+        <Routes />
       </AppContext.Provider>));
     })
 
