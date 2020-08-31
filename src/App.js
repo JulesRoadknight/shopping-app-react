@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './App.css';
 import Routes from './Routes';
 import { AppContext } from './libs/contextLib';
 import 'bootstrap/dist/css/bootstrap.min.css';
