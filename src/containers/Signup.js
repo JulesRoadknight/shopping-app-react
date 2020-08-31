@@ -11,6 +11,7 @@ const Signup = () => {
   const [fields, handleFieldChange] = useFormFields({
     email: '',
     password: '',
+    confirmPassword: '',
   });
 
   const [newUser, setNewUser] = useState(null);
