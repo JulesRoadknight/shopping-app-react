@@ -66,7 +66,6 @@ const userDetailsStyle = {
   marginTop: "10%",
   marginLeft: "10%",
   width: "80%",
-  flexDirection: 'column',
   backgroundColor: '#fafafa',
   justifyContent: 'center',
   alignItems: 'center'
@@ -78,7 +77,6 @@ const confirmCancelButtonStyle = {
   width: "80%",
   flexDirection: 'column',
   justifyContent: 'center'
-  // alignItems: 'center'
 }
 
 export default Account;
