@@ -8,7 +8,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const updateUserDetails = (details) => {
-    setIsAuthenticated(true);
     setUserDetailsState(details);
   }
 

@@ -32,7 +32,7 @@ const Login = ({ data, onSend }) => {
 
     try {
       setIsAuthenticated(await authenciateUser(email, password));
-      onSend(await getUserData(email));
+      onSend((await getUserData(email))[0]);
     } catch (e) {
       onError(e);
     }

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import LoaderButton from "../components/LoaderButton";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
+import { isUserUnique } from "../libs/checkUniqueUser";
 import axios from 'axios';
 
 const Signup = () => {
@@ -17,15 +18,6 @@ const Signup = () => {
   const [newUser, setNewUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
-
-  const isUserUnique = async (email) => {
-    if(email !== undefined) {
-    let result = await fetch(`http://localhost:4000/users/exists/${email}`)
-    let jsonData = await result.json();
-
-    return !jsonData[0].exists;
-    }
-  }
 
   function postNewUser(email, password) {
     axios.post(`http://localhost:4000/users`, [email, password])
