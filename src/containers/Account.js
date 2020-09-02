@@ -60,7 +60,7 @@ const Account = ({ data, onSend }) => {
 
   function saveUpdates() {
     for (const field in details) {
-      if (details[field] !== null && details[field] !== undefined) {
+      if (details[field] !== null && details[field] !== undefined && details[field] !== '') {
         editUserDetails(field, details[field]);
       }
     }
@@ -139,7 +139,7 @@ const Account = ({ data, onSend }) => {
               <FormControl
                 data-testid='editFullName'
                 type="text"
-                value={details.full_name}
+                value={details.full_name || ''}
                 onChange={handleDetailsChange}
               />
             </FormGroup>
@@ -148,7 +148,7 @@ const Account = ({ data, onSend }) => {
               <FormControl
                 data-testid='editAddress'
                 type="address"
-                value={details.address}
+                value={details.address || ''}
                 onChange={handleDetailsChange}
               />
             </FormGroup>
@@ -157,7 +157,7 @@ const Account = ({ data, onSend }) => {
               <FormControl
                 data-testid='editPostcode'
                 type="postcode"
-                value={details.postcode}
+                value={details.postcode || ''}
                 onChange={handleDetailsChange}
               />
             </FormGroup>
