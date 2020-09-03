@@ -98,13 +98,33 @@ const Account = ({ data, onSend }) => {
     let listOfDetails = [];
     for (const detail in details) {
       listOfDetails.push(
-        <h3 data-testid={`user_${detail}`} value={data[detail]} key={detail}>
+        <h3 data-testid={`user_${detail}`} value={data[detail]} key={`key_list_${detail}`}>
           {detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}: { data[detail] }
         </h3>
       );
     }
     return(
       listOfDetails
+    )
+  }
+
+  function displayEditDetails() {
+    let listOfForms = [];
+    for (const detail in details) {
+      listOfForms.push(
+        <FormGroup controlId={detail} key={`key_edit_${detail}`}>
+          <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
+          <FormControl
+            data-testid={`edit_${detail}`}
+            type={detail}
+            value={details[detail] || ''}
+            onChange={handleDetailsChange}
+          />
+        </FormGroup>
+      );
+    }
+    return(
+      listOfForms
     )
   }
 
@@ -119,48 +139,12 @@ const Account = ({ data, onSend }) => {
         }
         { isEditing &&
           <form onSubmit={handleSubmit}>
-            <FormGroup controlId="email">
-              <FormLabel>Email</FormLabel>
-              <FormControl
-                data-testid="editEmail"
-                autoFocus
-                type="email"
-                value={details.email}
-                onChange={handleDetailsChange}
-              />
-            </FormGroup>
+          { displayEditDetails() }
             { emailTaken &&
               <h4 data-testid='emailTaken' style={{color:'red'}}>
                 This email is already taken
               </h4>
             }
-            <FormGroup controlId="full_name">
-              <FormLabel>Full Name</FormLabel>
-              <FormControl
-                data-testid='editFullName'
-                type="text"
-                value={details.full_name || ''}
-                onChange={handleDetailsChange}
-              />
-            </FormGroup>
-            <FormGroup controlId="address">
-              <FormLabel>Address</FormLabel>
-              <FormControl
-                data-testid='editAddress'
-                type="address"
-                value={details.address || ''}
-                onChange={handleDetailsChange}
-              />
-            </FormGroup>
-            <FormGroup controlId="postcode">
-              <FormLabel>Postcode</FormLabel>
-              <FormControl
-                data-testid='editPostcode'
-                type="postcode"
-                value={details.postcode || ''}
-                onChange={handleDetailsChange}
-              />
-            </FormGroup>
             <LoaderButton
               data-testid='confirmChangesButton'
               block

@@ -35,26 +35,26 @@ describe('Editing User Details', () => {
     cy.get('[data-testid="editUserDetailsButton"]')
       .click();
 
-    cy.get('[data-testid="userEmail"]')
+    cy.get('[data-testid="user_email"]')
       .should('not.be.visible');
 
-    cy.get('[data-testid="editEmail"]')
+    cy.get('[data-testid="edit_email"]')
       .should('be.visible');
 
-    cy.get('[data-testid="editEmail"]')
+    cy.get('[data-testid="edit_email"]')
       .should('be.visible')
       .should('have.value', 'test@editdetails.com');
 
-    cy.get('[data-testid="editEmail"]')
+    cy.get('[data-testid="edit_email"]')
       .clear();
 
-    cy.get('[data-testid="editEmail"]')
+    cy.get('[data-testid="edit_email"]')
       .type('edited@useremail.com');
 
     cy.get('[data-testid="confirmChangesButton"]')
       .click();
 
-    cy.get('[data-testid="editEmail"]')
+    cy.get('[data-testid="edit_email"]')
       .should('not.be.visible');
 
     cy.get('[data-testid="user_email"]')
