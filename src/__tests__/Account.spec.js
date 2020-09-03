@@ -17,11 +17,11 @@ describe('<Account />', () => {
     })
 
     it('Shows the details of the user', () => {
-      expect(getByTestId('userEmail').getAttribute('value')).toEqual(userDetails.email);
+      expect(getByTestId('user_email').getAttribute('value')).toEqual(userDetails.email);
     });
 
     it('Shows the details of the user', () => {
-      expect(getByTestId('userFullName').getAttribute('value')).toEqual(userDetails.full_name);
+      expect(getByTestId('user_full_name').getAttribute('value')).toEqual(userDetails.full_name);
     });
 
     it('Shows the `Delete Account` button', () => {

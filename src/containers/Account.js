@@ -94,27 +94,27 @@ const Account = ({ data, onSend }) => {
     }
   }
 
+  function displayUserDetails() {
+    let listOfDetails = [];
+    for (const detail in details) {
+      listOfDetails.push(
+        <h3 data-testid={`user_${detail}`} value={data[detail]} key={detail}>
+          {detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}: { data[detail] }
+        </h3>
+      );
+    }
+    return(
+      listOfDetails
+    )
+  }
+
   return (
     <div className="Account">
       <div style={userDetailsStyle}>
         <br/>
         { !isEditing &&
           <>
-            <h3 data-testid="userEmail" value={data.email}>
-              Email: { data.email }
-            </h3>
-            <h3 data-testid="userFullName" value={data.full_name}>
-              Name: { data.full_name }
-            </h3>
-            <h3 data-testid="userAddress" value={data.address}>
-              Address: { data.address }
-            </h3>
-            <h3 data-testid="userPostcode" value={data.postcode}>
-              Postcode: { data.postcode }
-            </h3>
-            <h3 data-testid="userDOB" value={data.dob}>
-              DOB: { data.dob }
-            </h3>
+            { displayUserDetails() }
           </>
         }
         { isEditing &&

@@ -57,7 +57,7 @@ describe('Editing User Details', () => {
     cy.get('[data-testid="editEmail"]')
       .should('not.be.visible');
 
-    cy.get('[data-testid="userEmail"]')
+    cy.get('[data-testid="user_email"]')
       .should('be.visible');
 
     cy.contains('edited@useremail.com')
