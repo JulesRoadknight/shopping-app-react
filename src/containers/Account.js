@@ -6,7 +6,7 @@ import { useFormFields } from "../libs/hooksLib";
 import { useAppContext } from '../libs/contextLib';
 import { onError } from "../libs/errorLib";
 import { isUserUnique } from "../libs/checkUniqueUser";
-import axios from 'axios';
+// import axios from 'axios';
 
 const Account = ({ data, onSend }) => {
   const { setIsAuthenticated } = useAppContext();
@@ -76,17 +76,35 @@ const Account = ({ data, onSend }) => {
     );
   }
 
-  function editUserDetails(column, detail) {
+  async function editUserDetails(column, detail) {
     try {
-      axios.put(`http://localhost:4000/users/update/${data.id}/${column}/${detail}`, [id, column, detail]);
+      const config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([id, column, detail])
+      }
+      await fetch(`http://localhost:4000/users/update/${data.id}/${column}/${detail}`, config)
+      // axios.put(`http://localhost:4000/users/update/${data.id}/${column}/${detail}`, [id, column, detail]);
     } catch (e) {
       console.error(e);
     }
   }
 
-  function deleteUser() {
+  async function deleteUser() {
     try {
-      axios.delete(`http://localhost:4000/users/delete/${id}`, [id]);
+      const config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([id])
+      }
+      await fetch(`http://localhost:4000/delete/${id}`, config)
+      // axios.delete(`http://localhost:4000/users/delete/${id}`, [id]);
       onSend({});
       setIsAuthenticated(false);
     } catch (e) {
@@ -112,6 +130,7 @@ const Account = ({ data, onSend }) => {
     let listOfForms = [];
     for (const detail in details) {
       listOfForms.push(
+
         <FormGroup controlId={detail} key={`key_edit_${detail}`}>
           <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
           <FormControl
@@ -121,6 +140,7 @@ const Account = ({ data, onSend }) => {
             onChange={handleDetailsChange}
           />
         </FormGroup>
+
       );
     }
     return(
@@ -132,11 +152,13 @@ const Account = ({ data, onSend }) => {
     <div className="Account">
       <div style={userDetailsStyle}>
         <br/>
+
         { !isEditing &&
           <>
             { displayUserDetails() }
           </>
         }
+
         { isEditing &&
           <form onSubmit={handleSubmit}>
           { displayEditDetails() }
@@ -156,6 +178,7 @@ const Account = ({ data, onSend }) => {
             </LoaderButton>
           </form>
         }
+
         <br/>
       </div>
 
@@ -174,6 +197,7 @@ const Account = ({ data, onSend }) => {
           <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleShowDeleteButton}>Cancel</Button>
         </div>
       }
+
     </div>
   );
 }

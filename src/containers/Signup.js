@@ -4,7 +4,7 @@ import LoaderButton from "../components/LoaderButton";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
 import { isUserUnique } from "../libs/checkUniqueUser";
-import axios from 'axios';
+// import axios from 'axios';
 
 const Signup = () => {
   const MINIMUM_PASSWORD_LENGTH = 8;
@@ -19,10 +19,19 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
 
-  function postNewUser(email, password) {
-    axios.post(`http://localhost:4000/users`, [email, password])
-    .then(res => console.log(res.status))
-    .catch(err => console.log(err));
+  async function postNewUser(email, password) {
+    const config = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([email, password])
+    }
+    await fetch(`http://localhost:4000/users`, config)
+    // axios.post(`http://localhost:4000/users`, [email, password])
+    // .then(res => console.log(res.status))
+    // .catch(err => console.log(err));
   }
 
   function areFieldsValid() {
