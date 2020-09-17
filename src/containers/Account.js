@@ -84,9 +84,9 @@ const Account = ({ data, onSend }) => {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify([id, column, detail])
+        body: JSON.stringify([id, detail, column])
       }
-      await fetch(`http://localhost:4000/users/update/${data.id}/${column}/${detail}`, config)
+      await fetch(`http://localhost:4000/users/update`, config)
       // axios.put(`http://localhost:4000/users/update/${data.id}/${column}/${detail}`, [id, column, detail]);
     } catch (e) {
       console.error(e);
@@ -124,7 +124,6 @@ const Account = ({ data, onSend }) => {
 
       );
     }
-    
     return(
       listOfDetails
     )
