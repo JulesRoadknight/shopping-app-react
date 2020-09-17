@@ -114,13 +114,17 @@ const Account = ({ data, onSend }) => {
 
   function displayUserDetails() {
     let listOfDetails = [];
+
     for (const detail in details) {
       listOfDetails.push(
+
         <h3 data-testid={`user_${detail}`} value={data[detail]} key={`key_list_${detail}`}>
           {detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}: { data[detail] }
         </h3>
+
       );
     }
+    
     return(
       listOfDetails
     )

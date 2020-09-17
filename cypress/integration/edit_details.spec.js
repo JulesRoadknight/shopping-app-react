@@ -1,6 +1,6 @@
 describe('Editing User Details', () => {
-  it('Edits user email', () => {
-     cy.visit('http://localhost:3000');
+  it('Signs up', () => {
+    cy.visit('http://localhost:3000');
 
     cy.get('[data-testid="signupButton"]')
       .click();
@@ -16,7 +16,9 @@ describe('Editing User Details', () => {
 
     cy.get('[data-testid="signupSubmit"]')
       .click();
+  })
 
+  it('Logs in', () => {
     cy.get('[data-testid="loginButton"]')
       .click();
 
@@ -28,7 +30,9 @@ describe('Editing User Details', () => {
 
     cy.get('[data-testid="loginSubmit"]')
       .click();
+  })
 
+  it('Displays the edit fields', () => {
     cy.get('[data-testid="accountButton"]')
       .click();
 
@@ -44,7 +48,9 @@ describe('Editing User Details', () => {
     cy.get('[data-testid="edit_email"]')
       .should('be.visible')
       .should('have.value', 'test@editdetails.com');
+  })
 
+  it('Edits user email', () => {
     cy.get('[data-testid="edit_email"]')
       .clear();
 
@@ -62,7 +68,35 @@ describe('Editing User Details', () => {
 
     cy.contains('edited@useremail.com')
       .should('be.visible');
+  })
+  
+  it('Logs in with updated email', () => {
+    cy.get('[data-testid="logoutButton"]')
+      .click();
 
+    cy.get('[data-testid="loginButton"]')
+      .click();
+
+    cy.get('[data-testid="loginEmail"]')
+      .type('edited@useremail.com');
+
+    cy.get('[data-testid="loginPassword"]')
+      .type('testedit');
+
+    cy.get('[data-testid="loginSubmit"]')
+      .click();
+
+    cy.get('[data-testid="accountButton"]')
+      .click();
+
+    cy.get('[data-testid="user_email"]')
+      .should('be.visible');
+
+    cy.contains('edited@useremail.com')
+      .should('be.visible');
+  })
+
+  it('Deletes the account', () => {
     cy.get('[data-testid="deleteAccountButton"]')
       .click();
 
