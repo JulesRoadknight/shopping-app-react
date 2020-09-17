@@ -39,7 +39,7 @@ const Login = ({ data, onSend }) => {
   }
 
   return (
-    <div className="Login">
+    <div className="Login" style={loginStyle}>
       <form onSubmit={handleSubmit}>
         <FormGroup controlId="email">
           <FormLabel>Email</FormLabel>
@@ -60,12 +60,32 @@ const Login = ({ data, onSend }) => {
             type="password"
           />
         </FormGroup>
-        <Button data-testid="loginSubmit" disabled={!validateForm()} type="submit">
-          Login
-        </Button>
+        <div style={buttonStyle}>
+          <Button data-testid="loginSubmit" disabled={!validateForm()} type="submit">
+            Login
+          </Button>
+          <br/>
+        </div>
       </form>
     </div>
   );
+}
+
+const loginStyle = {
+  marginTop: "10%",
+  marginLeft: "10%",
+  width: "80%",
+  backgroundColor: '#fafafa',
+  justifyContent: 'center',
+  alignItems: 'center'
+}
+
+const buttonStyle = {
+  display: "flex",
+  marginLeft: "10%",
+  width: "80%",
+  flexDirection: 'column',
+  justifyContent: 'center'
 }
 
 export default Login;
