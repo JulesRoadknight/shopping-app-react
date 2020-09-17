@@ -111,10 +111,19 @@ const Signup = () => {
   }
 
   return (
-    <div className="Signup">
+    <div className="Signup" style={signupStyle}>
       {renderForm()}
     </div>
   );
+}
+
+const signupStyle = {
+  marginTop: "10%",
+  marginLeft: "10%",
+  width: "80%",
+  backgroundColor: '#fafafa',
+  justifyContent: 'center',
+  alignItems: 'center'
 }
 
 export default Signup;

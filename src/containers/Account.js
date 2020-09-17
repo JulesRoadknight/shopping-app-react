@@ -103,7 +103,7 @@ const Account = ({ data, onSend }) => {
         },
         body: JSON.stringify([id])
       }
-      await fetch(`http://localhost:4000/delete/${id}`, config)
+      await fetch(`http://localhost:4000/users/delete/${id}`, config)
       // axios.delete(`http://localhost:4000/users/delete/${id}`, [id]);
       onSend({});
       setIsAuthenticated(false);

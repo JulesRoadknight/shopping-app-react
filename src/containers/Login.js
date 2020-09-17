@@ -61,7 +61,12 @@ const Login = ({ data, onSend }) => {
           />
         </FormGroup>
         <div style={buttonStyle}>
-          <Button data-testid="loginSubmit" disabled={!validateForm()} type="submit">
+          <Button
+            data-testid='loginSubmit'
+            block
+            type="submit"
+            disabled={!validateForm()}
+          >
             Login
           </Button>
           <br/>
