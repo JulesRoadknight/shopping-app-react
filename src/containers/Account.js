@@ -7,8 +7,6 @@ import { onError } from "../libs/errorLib";
 import { isUserUnique } from "../libs/checkUniqueUser";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-// import axios from 'axios';
-
 
 const Account = ({ data, onSend }) => {
   const { setIsAuthenticated } = useAppContext();
@@ -107,8 +105,8 @@ const Account = ({ data, onSend }) => {
       }
     );
   }
-
-  async function editUserDetails(column, detail) {
+  
+  async function editUserDetail(column, detail) {
     try {
       const config = {
         method: 'POST',
@@ -119,7 +117,6 @@ const Account = ({ data, onSend }) => {
         body: JSON.stringify([id, detail, column])
       }
       await fetch(`http://localhost:4000/users/update`, config)
-      // axios.put(`http://localhost:4000/users/update/${data.id}/${column}/${detail}`, [id, column, detail]);
     } catch (e) {
       console.error(e);
     }
@@ -136,7 +133,6 @@ const Account = ({ data, onSend }) => {
         body: JSON.stringify([id])
       }
       await fetch(`http://localhost:4000/users/delete/${id}`, config)
-      // axios.delete(`http://localhost:4000/users/delete/${id}`, [id]);
       onSend({});
       setIsAuthenticated(false);
     } catch (e) {
@@ -167,19 +163,22 @@ const Account = ({ data, onSend }) => {
   function displayEditDetails() {
     let listOfForms = [];
     for (const detail in details) {
-        listOfForms.push(
-          <FormGroup controlId={detail} key={`key_edit_${detail}`}>
-            <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
-            <FormControl
-              data-testid={`edit_${detail}`}
-              type={detail}
-              value={details[detail] || ''}
-              onChange={handleDetailsChange}
-            />
-          </FormGroup>
-        )
+      listOfForms.push(
+
+        <FormGroup controlId={detail} key={`key_edit_${detail}`}>
+          <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
+          <FormControl
+            data-testid={`edit_${detail}`}
+            type={detail}
+            value={details[detail] || ''}
+            onChange={handleDetailsChange}
+          />
+        </FormGroup>
+
+      )
     }
     listOfForms.push(
+
       <div key={'key_edit_dob'}>
         <FormLabel>Date of Birth - mm/dd/yyyy</FormLabel>
         <br/>
