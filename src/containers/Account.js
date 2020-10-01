@@ -170,11 +170,16 @@ const Account = ({ data, onSend }) => {
         )
     }
     listOfForms.push(
-      <DatePicker
-        selected={dob}
-        onChange={setDob}
-        maxDate={new Date()}
-      />
+      <div key={'key_edit_dob'}>
+        <FormLabel>Date of Birth - mm/dd/yyyy</FormLabel>
+        <br/>
+        <DatePicker
+          selected={dob}
+          onChange={setDob}
+          maxDate={new Date()}
+        />
+        <br/>
+      </div>
     );
     return(
       listOfForms
