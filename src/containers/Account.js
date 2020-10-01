@@ -10,7 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const Account = ({ data, onSend }) => {
   const { setIsAuthenticated } = useAppContext();
-  const [deleteAccountButtonClicked, setDeleteAccountButtonClicked] = useState(false);
+  const [showDeleteAccountButton, setShowDeleteAccountButton] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [emailTaken, setEmailTaken] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,12 +30,16 @@ const Account = ({ data, onSend }) => {
     } else if (isforDisplay) {
       return dob.toDateString()
     } else {
-      return `${dob.getFullYear()}-${dob.getMonth() + 1}-${dob.getDate()}`
+      return formattedDate()
     };
   }
 
+  const formattedDate = () => {
+    return `${dob.getFullYear()}-${dob.getMonth() + 1}-${dob.getDate()}`
+  }
+
   const toggleShowDeleteButton = () => {
-    setDeleteAccountButtonClicked(!deleteAccountButtonClicked);
+    setShowDeleteAccountButton(!showDeleteAccountButton);
   }
 
   const toggleEdit = () => {
@@ -81,10 +85,14 @@ const Account = ({ data, onSend }) => {
 
   const updateDetailsLoop = () => {
     for (const field in details) {
-      if (details[field] !== null && details[field] !== undefined && details[field] !== '') {
+      if (fieldHasAValue(field)) {
         editUserDetail(field, details[field]);
       }
     }
+  }
+
+  const fieldHasAValue = (field) => {
+    return details[field] !== null && details[field] !== undefined && details[field] !== '';
   }
 
   const updateDOB = () => {
@@ -105,7 +113,7 @@ const Account = ({ data, onSend }) => {
       }
     );
   }
-  
+
   async function editUserDetail(column, detail) {
     try {
       const config = {
@@ -145,40 +153,69 @@ const Account = ({ data, onSend }) => {
 
     for (const detail in details) {
       listOfDetails.push(
-        <h3 data-testid={`user_${detail}`} value={data[detail]} key={`key_list_${detail}`}>
-          {detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}: { data[detail] }
-        </h3>
+        header(detail)
       );
     }
+
     listOfDetails.push(
-      <h3 data-testid={`user_dob`} value={dob} key={`key_list_dob`}>
-          Date of Birth: { dateOnly(true) }
-      </h3>
+      dobHeader()
     )
+
     return(
       listOfDetails
     )
   }
 
+  const header = (detail) => {
+    return(
+      <h3 data-testid={`user_${detail}`} value={data[detail]} key={`key_list_${detail}`}>
+        {detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}: { data[detail] }
+      </h3>
+    )
+  }
+
+  const dobHeader = () => {
+    return(
+      <h3 data-testid={`user_dob`} value={dob} key={`key_list_dob`}>
+        Date of Birth: { dateOnly(true) }
+      </h3>
+    )
+  }
+
   function displayEditDetails() {
     let listOfForms = [];
+
     for (const detail in details) {
       listOfForms.push(
-
-        <FormGroup controlId={detail} key={`key_edit_${detail}`}>
-          <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
-          <FormControl
-            data-testid={`edit_${detail}`}
-            type={detail}
-            value={details[detail] || ''}
-            onChange={handleDetailsChange}
-          />
-        </FormGroup>
-
+        editDetailForm(detail)
       )
     }
-    listOfForms.push(
 
+    listOfForms.push(
+      editDobForm()
+    );
+
+    return(
+      listOfForms
+    )
+  }
+
+  const editDetailForm = (detail) => {
+    return(
+      <FormGroup controlId={detail} key={`key_edit_${detail}`}>
+        <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
+        <FormControl
+          data-testid={`edit_${detail}`}
+          type={detail}
+          value={details[detail] || ''}
+          onChange={handleDetailsChange}
+        />
+      </FormGroup>
+    )
+  }
+
+  const editDobForm = () => {
+    return(
       <div key={'key_edit_dob'}>
         <FormLabel>Date of Birth - mm/dd/yyyy</FormLabel>
         <br/>
@@ -189,10 +226,6 @@ const Account = ({ data, onSend }) => {
         />
         <br/>
       </div>
-      
-    );
-    return(
-      listOfForms
     )
   }
 
@@ -237,7 +270,7 @@ const Account = ({ data, onSend }) => {
         <Button data-testid='deleteAccountButton' variant='outline-danger' onClick={toggleShowDeleteButton} value='Delete Account'>Delete Account</Button>
       </div>
 
-      { deleteAccountButtonClicked &&
+      { showDeleteAccountButton &&
         <div style={buttonStyle}>
           <br />
           <Button data-testid='confirmDeleteAccountButton' variant='danger' onClick={deleteUser}>Confirm Delete Account</Button>
