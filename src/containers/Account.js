@@ -18,14 +18,12 @@ const Account = ({ data, onSend }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const id = data.id;
-  
   const [details, handleDetailsChange] = useFormFields({
     email: data.email,
     full_name: data.full_name,
     address: data.address,
     postcode: data.postcode,
   });
-
   const [dob, setDob] = useState(new Date(data.dob));
 
   const dateOnly = (isforDisplay = false) => {
@@ -78,14 +76,26 @@ const Account = ({ data, onSend }) => {
   }
 
   async function saveUpdates() {
+    updateDetailsLoop();
+    updateDOB();
+    updateState();
+  }
+
+  const updateDetailsLoop = () => {
     for (const field in details) {
       if (details[field] !== null && details[field] !== undefined && details[field] !== '') {
-        editUserDetails(field, details[field]);
+        editUserDetail(field, details[field]);
       }
     }
+  }
+
+  const updateDOB = () => {
     if (isAValidDate()) {
-      editUserDetails('dob', dateOnly());
+      editUserDetail('dob', dateOnly());
     }
+  }
+
+  const updateState = () => {
     onSend(
       {
         id: data.id,
@@ -180,6 +190,7 @@ const Account = ({ data, onSend }) => {
         />
         <br/>
       </div>
+      
     );
     return(
       listOfForms
