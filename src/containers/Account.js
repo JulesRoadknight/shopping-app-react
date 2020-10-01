@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import { FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Button, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
 import LoaderButton from "../components/LoaderButton";
 import { useFormFields } from "../libs/hooksLib";
 import { useAppContext } from '../libs/contextLib';
 import { onError } from "../libs/errorLib";
 import { isUserUnique } from "../libs/checkUniqueUser";
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 // import axios from 'axios';
+
 
 const Account = ({ data, onSend }) => {
   const { setIsAuthenticated } = useAppContext();
@@ -22,8 +24,19 @@ const Account = ({ data, onSend }) => {
     full_name: data.full_name,
     address: data.address,
     postcode: data.postcode,
-    dob: data.dob
   });
+
+  const [dob, setDob] = useState(new Date(data.dob));
+
+  const dateOnly = (isforDisplay = false) => {
+    if (dob === null) {
+      return null
+    } else if (isforDisplay) {
+      return dob.toDateString()
+    } else {
+      return `${dob.getFullYear()}-${dob.getMonth() + 1}-${dob.getDate()}`
+    };
+  }
 
   const toggleShowDeleteButton = () => {
     setDeleteAccountButtonClicked(!deleteAccountButtonClicked);
@@ -36,6 +49,12 @@ const Account = ({ data, onSend }) => {
   function areFieldsValid() {
     return (
       details.email.length > 0
+    )
+  }
+
+  function isAValidDate() {
+    return (
+      Object.prototype.toString.call(new Date(dateOnly())) === '[object Date]'
     )
   }
 
@@ -58,11 +77,14 @@ const Account = ({ data, onSend }) => {
     }
   }
 
-  function saveUpdates() {
+  async function saveUpdates() {
     for (const field in details) {
       if (details[field] !== null && details[field] !== undefined && details[field] !== '') {
         editUserDetails(field, details[field]);
       }
+    }
+    if (isAValidDate()) {
+      editUserDetails('dob', dateOnly());
     }
     onSend(
       {
@@ -71,7 +93,7 @@ const Account = ({ data, onSend }) => {
         full_name: details.full_name,
         address: details.address,
         postcode: details.postcode,
-        dob: details.dob
+        dob: dateOnly()
       }
     );
   }
@@ -117,13 +139,16 @@ const Account = ({ data, onSend }) => {
 
     for (const detail in details) {
       listOfDetails.push(
-
         <h3 data-testid={`user_${detail}`} value={data[detail]} key={`key_list_${detail}`}>
           {detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}: { data[detail] }
         </h3>
-
       );
     }
+    listOfDetails.push(
+      <h3 data-testid={`user_dob`} value={dob} key={`key_list_dob`}>
+          Date of Birth: { dateOnly(true) }
+      </h3>
+    )
     return(
       listOfDetails
     )
@@ -132,20 +157,25 @@ const Account = ({ data, onSend }) => {
   function displayEditDetails() {
     let listOfForms = [];
     for (const detail in details) {
-      listOfForms.push(
-
-        <FormGroup controlId={detail} key={`key_edit_${detail}`}>
-          <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
-          <FormControl
-            data-testid={`edit_${detail}`}
-            type={detail}
-            value={details[detail] || ''}
-            onChange={handleDetailsChange}
-          />
-        </FormGroup>
-
-      );
+        listOfForms.push(
+          <FormGroup controlId={detail} key={`key_edit_${detail}`}>
+            <FormLabel>{detail.charAt(0).toUpperCase() + detail.slice(1).replace('_', ' ')}</FormLabel>
+            <FormControl
+              data-testid={`edit_${detail}`}
+              type={detail}
+              value={details[detail] || ''}
+              onChange={handleDetailsChange}
+            />
+          </FormGroup>
+        )
     }
+    listOfForms.push(
+      <DatePicker
+        selected={dob}
+        onChange={setDob}
+        maxDate={new Date()}
+      />
+    );
     return(
       listOfForms
     )
@@ -198,6 +228,7 @@ const Account = ({ data, onSend }) => {
           <Button data-testid='confirmDeleteAccountButton' variant='danger' onClick={deleteUser}>Confirm Delete Account</Button>
           <br/>
           <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleShowDeleteButton}>Cancel</Button>
+          <br/>
         </div>
       }
 

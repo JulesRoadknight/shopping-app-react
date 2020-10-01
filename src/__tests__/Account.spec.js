@@ -9,19 +9,23 @@ describe('<Account />', () => {
 
   describe('Viewing the Account page', () => {
     let sendHandler;
-    let userDetails = {address: null, dob: null, email: "this@that.com", postcode: null, full_name: null}
+    let userDetails = {address: null, dob: '1999/2/1', email: "this@that.com", postcode: null, full_name: null}
 
     beforeEach(() => {
       sendHandler = jest.fn();
       ({ getByTestId } = render(<Account data={userDetails} />));
     })
 
-    it('Shows the details of the user', () => {
+    it('Shows the email of the user', () => {
       expect(getByTestId('user_email').getAttribute('value')).toEqual(userDetails.email);
     });
 
-    it('Shows the details of the user', () => {
+    it('Shows the name of the user', () => {
       expect(getByTestId('user_full_name').getAttribute('value')).toEqual(userDetails.full_name);
+    });
+
+    it('Shows the dob of the user in a readable format', () => {
+      expect(getByTestId('user_dob').getAttribute('value')).toContain('Mon Feb 01 1999');
     });
 
     it('Shows the `Delete Account` button', () => {

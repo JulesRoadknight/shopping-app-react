@@ -42,7 +42,10 @@ describe('Editing User Details', () => {
     cy.get('[data-testid="user_email"]')
       .should('not.be.visible');
 
-    cy.get('[data-testid="edit_email"]')
+    cy.get('[data-testid="edit_full_name"]')
+      .should('be.visible');
+
+    cy.get('.react-datepicker__input-container > input')
       .should('be.visible');
 
     cy.get('[data-testid="edit_email"]')
@@ -67,6 +70,23 @@ describe('Editing User Details', () => {
       .should('be.visible');
 
     cy.contains('edited@useremail.com')
+      .should('be.visible');
+  })
+
+  it('Adds user dob', () => {
+    cy.get('[data-testid="editUserDetailsButton"]')
+      .click();
+
+    cy.get('.react-datepicker__input-container > input')
+      .clear();
+
+    cy.get('.react-datepicker__input-container > input')
+      .type("1999-04-03");
+
+    cy.get('[data-testid="confirmChangesButton"]')
+      .click();
+
+    cy.contains('Sat Apr 03 1999')
       .should('be.visible');
   })
   
