@@ -14,10 +14,14 @@ const Login = ({ data, onSend }) => {
   }
 
   async function getUserData() {
-    const userData = await fetch(
-      `http://localhost:4000/users/${email}`
-    )
-    return await userData.json();
+    try {
+      const userData = await fetch(
+        `http://localhost:4000/users/${email}`
+      )
+      return await userData.json();
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async function authenciateUser() {
@@ -30,10 +34,8 @@ const Login = ({ data, onSend }) => {
         },
         body: JSON.stringify([email, password])
       }
-      const authenticate = await fetch(
-      `http://localhost:4000/users/login`, config
-    )
-    return await authenticate.json();
+      const authenticate = await fetch(`http://localhost:4000/users/login`, config)
+      return await authenticate.json();
     } catch (e) {
       console.error(e)
     }

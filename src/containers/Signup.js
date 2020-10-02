@@ -4,7 +4,7 @@ import LoaderButton from "../components/LoaderButton";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
 import { isUserUnique } from "../libs/checkUniqueUser";
-// import axios from 'axios';
+import { makeRequest } from '../libs/requestLib';
 
 const Signup = () => {
   const MINIMUM_PASSWORD_LENGTH = 8;
@@ -21,15 +21,7 @@ const Signup = () => {
 
   async function postNewUser(email, password) {
     try {
-      const config = {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify([email, password])
-      }
-      await fetch(`http://localhost:4000/users`, config) 
+      makeRequest('POST', 'users', [email, password]);
     } catch (e) {
       console.error(e)
     }

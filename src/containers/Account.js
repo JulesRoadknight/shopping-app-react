@@ -7,6 +7,7 @@ import { onError } from "../libs/errorLib";
 import { isUserUnique } from "../libs/checkUniqueUser";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { makeRequest } from '../libs/requestLib';
 
 const Account = ({ data, onSend }) => {
   const { setIsAuthenticated } = useAppContext();
@@ -120,15 +121,7 @@ const Account = ({ data, onSend }) => {
 
   async function editUserDetail(column, detail) {
     try {
-      const config = {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify([id, detail, column])
-      }
-      await fetch(`http://localhost:4000/users/update`, config)
+      makeRequest('POST', 'users/update', [id, column, detail]);
     } catch (e) {
       console.error(e);
     }
@@ -136,15 +129,7 @@ const Account = ({ data, onSend }) => {
 
   async function deleteUser() {
     try {
-      const config = {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify([id])
-      }
-      await fetch(`http://localhost:4000/users/delete/${id}`, config)
+      makeRequest('GET', `users/delete/${id}`);
       onSend({});
       setIsAuthenticated(false);
     } catch (e) {
