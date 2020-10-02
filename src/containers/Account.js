@@ -229,57 +229,76 @@ const Account = ({ data, onSend }) => {
     )
   }
 
-  return (
-    <div className="Account">
-      <div style={userDetailsStyle}>
-        <br/>
+  const emailTakenHeader = () => {
+    return (
+      <h4 data-testid='emailTaken' style={{color:'red'}}>
+        This email is already taken
+      </h4>
+    )
+  }
 
-        { !isEditing &&
-          <>
-            { displayUserDetails() }
-          </>
-        }
+  const displayLoaderButton = () => {
+    return(
+      <LoaderButton
+        data-testid='confirmChangesButton'
+        block
+        type="submit"
+        isLoading={isLoading}
+        disabled={!areFieldsValid()}
+      >
+        Confirm Changes
+      </LoaderButton>
+    )
+  }
 
-        { isEditing &&
-          <form onSubmit={handleSubmit}>
-          { displayEditDetails() }
-            { emailTaken &&
-              <h4 data-testid='emailTaken' style={{color:'red'}}>
-                This email is already taken
-              </h4>
-            }
-            <LoaderButton
-              data-testid='confirmChangesButton'
-              block
-              type="submit"
-              isLoading={isLoading}
-              disabled={!areFieldsValid()}
-            >
-              Confirm Changes
-            </LoaderButton>
-          </form>
-        }
-
-        <br/>
-      </div>
-
-      <br/>
+  const displayEditDeleteButtons = () => {
+    return(
       <div style={buttonStyle}>
         <Button data-testid='editUserDetailsButton' variant='outline-warning' onClick={toggleEdit} value='Edit Details'>{isEditing ? 'Cancel Edit' : 'Edit Details'}</Button>
         <br/>
         <Button data-testid='deleteAccountButton' variant='outline-danger' onClick={toggleShowDeleteButton} value='Delete Account'>Delete Account</Button>
       </div>
+    )
+  }
 
+  const displayConfirmDeleteAccountButton = () => {
+    return(
+      <div style={buttonStyle}>
+        <br />
+        <Button data-testid='confirmDeleteAccountButton' variant='danger' onClick={deleteUser}>Confirm Delete Account</Button>
+        <br/>
+        <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleShowDeleteButton}>Cancel</Button>
+        <br/>
+      </div>
+    )
+  }
+
+  return (
+    <div className="Account">
+      <div style={userDetailsStyle}>
+        <br/>
+        { !isEditing &&
+          <>
+            { displayUserDetails() }
+          </>
+        }
+        { isEditing &&
+          <form onSubmit={handleSubmit}>
+            { displayEditDetails() }
+            { emailTaken &&
+              emailTakenHeader()
+            }
+            { displayLoaderButton() }
+          </form>
+        }
+        <br/>
+      </div>
+
+      <br/>
+      { displayEditDeleteButtons() }
       { showDeleteAccountButton &&
-        <div style={buttonStyle}>
-          <br />
-          <Button data-testid='confirmDeleteAccountButton' variant='danger' onClick={deleteUser}>Confirm Delete Account</Button>
-          <br/>
-          <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleShowDeleteButton}>Cancel</Button>
-          <br/>
-        </div>
+        displayConfirmDeleteAccountButton()
       }
-
     </div>
   );
 }
