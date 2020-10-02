@@ -241,6 +241,7 @@ const Account = ({ data, onSend }) => {
     return(
       <LoaderButton
         data-testid='confirmChangesButton'
+        style={spacingStyle}
         block
         type="submit"
         isLoading={isLoading}
@@ -254,9 +255,8 @@ const Account = ({ data, onSend }) => {
   const displayEditDeleteButtons = () => {
     return(
       <div style={buttonStyle}>
-        <Button data-testid='editUserDetailsButton' variant='outline-warning' onClick={toggleEdit} value='Edit Details'>{isEditing ? 'Cancel Edit' : 'Edit Details'}</Button>
-        <br/>
-        <Button data-testid='deleteAccountButton' variant='outline-danger' onClick={toggleShowDeleteButton} value='Delete Account'>Delete Account</Button>
+        <Button data-testid='editUserDetailsButton' style={spacingStyle} variant='outline-warning' onClick={toggleEdit} value='Edit Details'>{isEditing ? 'Cancel Edit' : 'Edit Details'}</Button>
+        <Button data-testid='deleteAccountButton' style={spacingStyle} variant='outline-danger' onClick={toggleShowDeleteButton} value='Delete Account'>Delete Account</Button>
       </div>
     )
   }
@@ -264,11 +264,8 @@ const Account = ({ data, onSend }) => {
   const displayConfirmDeleteAccountButton = () => {
     return(
       <div style={buttonStyle}>
-        <br />
         <Button data-testid='confirmDeleteAccountButton' variant='danger' onClick={deleteUser}>Confirm Delete Account</Button>
-        <br/>
         <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleShowDeleteButton}>Cancel</Button>
-        <br/>
       </div>
     )
   }
@@ -276,14 +273,13 @@ const Account = ({ data, onSend }) => {
   return (
     <div className="Account">
       <div style={userDetailsStyle}>
-        <br/>
         { !isEditing &&
           <>
             { displayUserDetails() }
           </>
         }
         { isEditing &&
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={userDetailsStyle}>
             { displayEditDetails() }
             { emailTaken &&
               emailTakenHeader()
@@ -291,10 +287,7 @@ const Account = ({ data, onSend }) => {
             { displayLoaderButton() }
           </form>
         }
-        <br/>
       </div>
-
-      <br/>
       { displayEditDeleteButtons() }
       { showDeleteAccountButton &&
         displayConfirmDeleteAccountButton()
@@ -304,7 +297,9 @@ const Account = ({ data, onSend }) => {
 }
 
 const userDetailsStyle = {
-  marginTop: "10%",
+  marginTop: "5%",
+  paddingTop: "5%",
+  paddingBottom: "5%",
   marginLeft: "10%",
   width: "80%",
   backgroundColor: '#fafafa',
@@ -314,10 +309,18 @@ const userDetailsStyle = {
 
 const buttonStyle = {
   display: "flex",
+  marginTop: "5%",
+  paddingTop: "5%",
+  paddingBottom: "5%",
   marginLeft: "10%",
   width: "80%",
   flexDirection: 'column',
   justifyContent: 'center'
+}
+
+const spacingStyle= {
+  marginTop: "5%",
+  marginButton: "5%"
 }
 
 export default Account;
