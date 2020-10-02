@@ -13,26 +13,38 @@ const Login = ({ data, onSend }) => {
     return email.length > 0 && password.length > 0;
   }
 
-  async function getUserData(email) {
+  async function getUserData() {
     const userData = await fetch(
       `http://localhost:4000/users/${email}`
     )
     return await userData.json();
   }
 
-  async function authenciateUser(email, password) {
-    const authenticate = await fetch(
-      `http://localhost:4000/users/login/${email}/${password}`
+  async function authenciateUser() {
+    try {
+      const config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([email, password])
+      }
+      const authenticate = await fetch(
+      `http://localhost:4000/users/login`, config
     )
     return await authenticate.json();
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     try {
-      setIsAuthenticated(await authenciateUser(email, password));
-      onSend((await getUserData(email))[0]);
+      setIsAuthenticated(await authenciateUser());
+      onSend((await getUserData())[0]);
     } catch (e) {
       onError(e);
     }

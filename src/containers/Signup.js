@@ -20,18 +20,19 @@ const Signup = () => {
   const [emailTaken, setEmailTaken] = useState(false);
 
   async function postNewUser(email, password) {
-    const config = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([email, password])
+    try {
+      const config = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([email, password])
+      }
+      await fetch(`http://localhost:4000/users`, config) 
+    } catch (e) {
+      console.error(e)
     }
-    await fetch(`http://localhost:4000/users`, config)
-    // axios.post(`http://localhost:4000/users`, [email, password])
-    // .then(res => console.log(res.status))
-    // .catch(err => console.log(err));
   }
 
   function areFieldsValid() {
