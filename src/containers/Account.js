@@ -38,7 +38,7 @@ const Account = ({ data, onSend }) => {
     return `${dob.getFullYear()}-${dob.getMonth() + 1}-${dob.getDate()}`
   }
 
-  const toggleShowDeleteButton = () => {
+  const toggleDelete = () => {
     setShowDeleteAccountButton(!showDeleteAccountButton);
   }
 
@@ -46,9 +46,9 @@ const Account = ({ data, onSend }) => {
     setIsEditing(!isEditing);
   }
 
-  function areFieldsValid() {
+  function isEmailBlank() {
     return (
-      details.email.length > 0
+      !details.email.length > 0
     )
   }
 
@@ -62,17 +62,21 @@ const Account = ({ data, onSend }) => {
     event.preventDefault();
     setIsLoading(true);
     if (await isUserUnique(details.email, id) === true) {
-      try {
-        saveUpdates();
-        setEmailTaken(false);
-        setIsLoading(false);
-        toggleEdit();
-      } catch (e) {
-        onError(e);
-        setIsLoading(false);
-      } 
+      sendUpdateRequest();
     } else {
       setEmailTaken(true);
+      setIsLoading(false);
+    }
+  }
+
+  const sendUpdateRequest = () => {
+    try {
+      saveUpdates();
+      setEmailTaken(false);
+      setIsLoading(false);
+      toggleEdit();
+    } catch (e) {
+      onError(e);
       setIsLoading(false);
     }
   }
@@ -245,7 +249,7 @@ const Account = ({ data, onSend }) => {
         block
         type="submit"
         isLoading={isLoading}
-        disabled={!areFieldsValid()}
+        disabled={isEmailBlank()}
       >
         Confirm Changes
       </LoaderButton>
@@ -256,7 +260,7 @@ const Account = ({ data, onSend }) => {
     return(
       <div style={buttonStyle}>
         <Button data-testid='editUserDetailsButton' style={spacingStyle} variant='outline-warning' onClick={toggleEdit} value='Edit Details'>{isEditing ? 'Cancel Edit' : 'Edit Details'}</Button>
-        <Button data-testid='deleteAccountButton' style={spacingStyle} variant='outline-danger' onClick={toggleShowDeleteButton} value='Delete Account'>Delete Account</Button>
+        <Button data-testid='deleteAccountButton' style={spacingStyle} variant='outline-danger' onClick={toggleDelete} value='Delete Account'>Delete Account</Button>
       </div>
     )
   }
@@ -265,7 +269,7 @@ const Account = ({ data, onSend }) => {
     return(
       <div style={buttonStyle}>
         <Button data-testid='confirmDeleteAccountButton' variant='danger' onClick={deleteUser}>Confirm Delete Account</Button>
-        <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleShowDeleteButton}>Cancel</Button>
+        <Button data-testid='cancelDeleteAccountButton' variant='outline-secondary' onClick={toggleDelete}>Cancel</Button>
       </div>
     )
   }
