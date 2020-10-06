@@ -18,7 +18,8 @@ const Login = ({ data, onSend }) => {
       const userData = await fetch(
         `http://localhost:4000/users/${email}`
       )
-      return await userData.json();
+      let data =  await userData.json();
+      return data;
     } catch (e) {
       console.error(e)
     }
@@ -26,15 +27,7 @@ const Login = ({ data, onSend }) => {
 
   async function authenciateUser() {
     try {
-      const config = {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify([email, password])
-      }
-      const authenticate = await fetch(`http://localhost:4000/users/login`, config)
+      const authenticate = await fetch(`http://localhost:4000/users/login/${email}/${password}`)
       return await authenticate.json();
     } catch (e) {
       console.error(e)

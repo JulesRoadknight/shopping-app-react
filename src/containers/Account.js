@@ -121,7 +121,7 @@ const Account = ({ data, onSend }) => {
 
   async function editUserDetail(column, detail) {
     try {
-      makeRequest('POST', 'users/update', [id, column, detail]);
+      makeRequest('PATCH', 'users/update', [id, column, detail]);
     } catch (e) {
       console.error(e);
     }
@@ -129,7 +129,7 @@ const Account = ({ data, onSend }) => {
 
   async function deleteUser() {
     try {
-      makeRequest('GET', `users/delete/${id}`);
+      makeRequest('DELETE', `users/delete/${id}`);
       onSend({});
       setIsAuthenticated(false);
     } catch (e) {
