@@ -8,6 +8,11 @@ describe('Signing up', () => {
     cy.get('[data-testid="signupSubmit"]')
       .should('be.disabled');
 
+    cy.request('GET', 'http://localhost:4000/users/exists/admin@example.com/0')
+      .should((response) => {
+        expect(response.body[0]).to.have.property('exists', true)
+      })
+
     cy.get('[data-testid="signupEmail"]')
       .type('admin@example.com');
 
@@ -18,7 +23,11 @@ describe('Signing up', () => {
       .type('nosuchpassword');
 
     cy.get('[data-testid="signupSubmit"]')
-      .should('not.be.disabled');
+      .should('not.be.disabled')
+      .click();
+
+    cy.get('[data-testid="emailTaken"]')
+      .should('be.visible');    
   })
 
   it('Signs up, logs in, and deletes a new account', () => {
@@ -101,5 +110,10 @@ describe('Signing up', () => {
 
     cy.get('[data-testid="logoutButton"]')
       .should('not.be.visible');
+
+    cy.request('GET', 'http://localhost:4000/users/exists/test@signup.com/0')
+      .should((response) => {
+        expect(response.body[0]).to.have.property('exists', false)
+    })
   })
 })

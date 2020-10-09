@@ -21,7 +21,7 @@ const Signup = () => {
 
   async function postNewUser(email, password) {
     try {
-      makeRequest('POST', 'users', [email, password]);
+      await makeRequest('POST', 'users', [email, password]);
     } catch (e) {
       console.error(e)
     }
@@ -43,7 +43,7 @@ const Signup = () => {
         setEmailTaken(false);
         setIsLoading(false);
         setNewUser(newUser);
-        postNewUser(fields.email, fields.password);
+        await postNewUser(fields.email, fields.password);
       } catch (e) {
         onError(e);
         setIsLoading(false);

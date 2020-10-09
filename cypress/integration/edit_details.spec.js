@@ -128,5 +128,15 @@ describe('Editing User Details', () => {
 
     cy.get('[data-testid="loginSubmit"]')
       .should('be.visible');
+
+    cy.request('GET', 'http://localhost:4000/users/exists/admin@example.com/0')
+      .should((response) => {
+        expect(response.body[0]).to.have.property('exists', true)
+    })
+
+    cy.request('GET', 'http://localhost:4000/users/exists/edited@useremail.com/0')
+      .should((response) => {
+        expect(response.body[0]).to.have.property('exists', false)
+    })
   })
 })

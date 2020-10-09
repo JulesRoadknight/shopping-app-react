@@ -129,9 +129,13 @@ const Account = ({ data, onSend }) => {
 
   async function deleteUser() {
     try {
-      makeRequest('DELETE', `users/delete/${id}`);
-      onSend({});
-      setIsAuthenticated(false);
+      let data = await makeRequest('DELETE', `users/delete/${id}`)
+        .then(
+          onSend({})
+        )
+        .then(
+          setIsAuthenticated(false)
+        )
     } catch (e) {
       console.error(e);
     }

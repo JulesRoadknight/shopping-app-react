@@ -1,7 +1,7 @@
   export async function makeRequest(method, address, details = null) {
-    const config = method === 'GET' ?
+    const config = method === 'GET' || method === 'DELETE' ?
       {
-        method: 'GET',
+        method: method,
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
