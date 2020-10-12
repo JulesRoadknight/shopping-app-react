@@ -8,6 +8,7 @@ const Login = ({ data, onSend }) => {
   const { setIsAuthenticated } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [failedAuthentication, setFailedAuthentication] = useState(null);
 
   function validateForm() {
     return email.length > 0 && password.length > 0;
@@ -38,7 +39,9 @@ const Login = ({ data, onSend }) => {
     event.preventDefault();
 
     try {
-      setIsAuthenticated(await authenciateUser());
+      const isAuthenticated = await authenciateUser()
+      setIsAuthenticated(isAuthenticated);
+      setFailedAuthentication(!isAuthenticated);
       onSend((await getUserData())[0]);
     } catch (e) {
       onError(e);
@@ -67,6 +70,11 @@ const Login = ({ data, onSend }) => {
             type="password"
           />
         </FormGroup>
+        { failedAuthentication &&
+          <h4 data-testid='failedAuthenticationHeader' style={{color:'red'}}>
+            Incorrect details, please try again
+          </h4>
+        }
         <div style={buttonStyle}>
           <Button
             data-testid='loginSubmit'

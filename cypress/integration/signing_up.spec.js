@@ -31,7 +31,9 @@ describe('Signing up', () => {
   })
 
   it('Signs up, logs in, and deletes a new account', () => {
-     cy.visit('http://localhost:3000');
+    cy.request('DELETE', 'http://localhost:4000/users/delete/email/test@signup.com');
+
+    cy.visit('http://localhost:3000');
 
     cy.get('[data-testid="signupButton"]')
       .click();

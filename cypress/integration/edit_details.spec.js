@@ -1,5 +1,8 @@
 describe('Editing User Details', () => {
   it('Signs up', () => {
+    cy.request('DELETE', 'http://localhost:4000/users/delete/email/test@editdetails.com');
+    cy.request('DELETE', 'http://localhost:4000/users/delete/email/edited@useremail.com');
+
     cy.visit('http://localhost:3000');
 
     cy.get('[data-testid="signupButton"]')

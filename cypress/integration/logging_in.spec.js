@@ -22,6 +22,9 @@ describe('Logging in', () => {
 
     cy.get('[data-testid="logoutButton"]')
       .should('not.be.visible');
+
+    cy.get('[data-testid="failedAuthenticationHeader"]')
+      .should('be.visible');
   })
 
   it('Logs in and out with correct credentials', () => {
@@ -38,6 +41,9 @@ describe('Logging in', () => {
     
     cy.get('[data-testid="loginSubmit"]')
       .click();
+
+    cy.get('[data-testid="failedAuthenticationHeader"]')
+      .should('not.be.visible');
 
     cy.get('[data-testid="loginButton"]')
       .should('not.be.visible');
