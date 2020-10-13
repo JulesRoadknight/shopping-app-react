@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, queryByText, screen } from '@testing-library/react';
 import Login from '../containers/Login';
 
 describe('<Login />', () => {
@@ -12,7 +12,7 @@ describe('<Login />', () => {
 
     beforeEach(() => {
       sendHandler = jest.fn();
-      ({ getByTestId } = render(<Login data={sendHandler, false} failedAuthentication={true} />));
+      ({ getByTestId } = render(<Login data={sendHandler, false} />));
     })
 
     it('Email field renders empty', () => {
@@ -25,6 +25,11 @@ describe('<Login />', () => {
 
     it('Submit button is disabled', () => {
       expect(getByTestId('loginSubmit')).toBeDisabled();
+    });
+
+    it('Does not render the failure header', () => {
+      const failureHeader = screen.queryByText('Incorrect details, please try again');
+      expect(failureHeader).toBeNull();
     });
   });
 });
